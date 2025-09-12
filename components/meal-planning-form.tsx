@@ -1,0 +1,389 @@
+"use client"
+
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Slider } from "@/components/ui/slider"
+import { Checkbox } from "@/components/ui/checkbox"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Badge } from "@/components/ui/badge"
+import { Separator } from "@/components/ui/separator"
+import { Calendar, Target, ChefHat, ArrowRight, Clock } from "lucide-react"
+import Link from "next/link"
+
+interface MealPlanPreferences {
+  duration: number
+  servings: number
+  goal: string
+  dietaryRestrictions: string[]
+  mealTypes: string[]
+  cookingTime: string
+  skillLevel: string
+}
+
+export function MealPlanningForm() {
+  const [preferences, setPreferences] = useState<MealPlanPreferences>({
+    duration: 7,
+    servings: 2,
+    goal: "",
+    dietaryRestrictions: [],
+    mealTypes: ["breakfast", "lunch", "dinner"],
+    cookingTime: "",
+    skillLevel: "",
+  })
+
+  const [currentStep, setCurrentStep] = useState(1)
+  const totalSteps = 4
+
+  const handleDietaryRestrictionChange = (restriction: string, checked: boolean) => {
+    setPreferences((prev) => ({
+      ...prev,
+      dietaryRestrictions: checked
+        ? [...prev.dietaryRestrictions, restriction]
+        : prev.dietaryRestrictions.filter((r) => r !== restriction),
+    }))
+  }
+
+  const handleMealTypeChange = (mealType: string, checked: boolean) => {
+    setPreferences((prev) => ({
+      ...prev,
+      mealTypes: checked ? [...prev.mealTypes, mealType] : prev.mealTypes.filter((m) => m !== mealType),
+    }))
+  }
+
+  const canProceedToNext = () => {
+    switch (currentStep) {
+      case 1:
+        return preferences.duration > 0 && preferences.servings > 0
+      case 2:
+        return preferences.goal !== ""
+      case 3:
+        return preferences.mealTypes.length > 0
+      case 4:
+        return preferences.cookingTime !== "" && preferences.skillLevel !== ""
+      default:
+        return false
+    }
+  }
+
+  const renderStep = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Calendar className="h-5 w-5" />
+                Duration & Servings
+              </CardTitle>
+              <CardDescription>How long do you want to plan for and how many people?</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-3">
+                <Label>Planning Duration: {preferences.duration} days</Label>
+                <Slider
+                  value={[preferences.duration]}
+                  onValueChange={(value) => setPreferences((prev) => ({ ...prev, duration: value[0] }))}
+                  max={28}
+                  min={3}
+                  step={1}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>3 days</span>
+                  <span>2 weeks</span>
+                  <span>4 weeks</span>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <Label>Number of Servings: {preferences.servings} people</Label>
+                <Slider
+                  value={[preferences.servings]}
+                  onValueChange={(value) => setPreferences((prev) => ({ ...prev, servings: value[0] }))}
+                  max={8}
+                  min={1}
+                  step={1}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>1 person</span>
+                  <span>4 people</span>
+                  <span>8 people</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )
+
+      case 2:
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Target className="h-5 w-5" />
+                Nutrition Goals
+              </CardTitle>
+              <CardDescription>What's your primary nutrition objective?</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <RadioGroup
+                value={preferences.goal}
+                onValueChange={(value) => setPreferences((prev) => ({ ...prev, goal: value }))}
+                className="space-y-4"
+              >
+                <div className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-secondary/50">
+                  <RadioGroupItem value="balanced" id="balanced" />
+                  <div className="flex-1">
+                    <Label htmlFor="balanced" className="font-medium">
+                      Balanced Nutrition
+                    </Label>
+                    <p className="text-sm text-muted-foreground">Well-rounded meals with all food groups</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-secondary/50">
+                  <RadioGroupItem value="weight-loss" id="weight-loss" />
+                  <div className="flex-1">
+                    <Label htmlFor="weight-loss" className="font-medium">
+                      Weight Management
+                    </Label>
+                    <p className="text-sm text-muted-foreground">Lower calorie, high protein meals</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-secondary/50">
+                  <RadioGroupItem value="muscle-gain" id="muscle-gain" />
+                  <div className="flex-1">
+                    <Label htmlFor="muscle-gain" className="font-medium">
+                      Muscle Building
+                    </Label>
+                    <p className="text-sm text-muted-foreground">High protein, nutrient-dense meals</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-secondary/50">
+                  <RadioGroupItem value="energy" id="energy" />
+                  <div className="flex-1">
+                    <Label htmlFor="energy" className="font-medium">
+                      Energy & Performance
+                    </Label>
+                    <p className="text-sm text-muted-foreground">Sustained energy for active lifestyles</p>
+                  </div>
+                </div>
+              </RadioGroup>
+            </CardContent>
+          </Card>
+        )
+
+      case 3:
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ChefHat className="h-5 w-5" />
+                Meal Preferences
+              </CardTitle>
+              <CardDescription>Select meal types and any dietary restrictions.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <Label className="text-base font-medium">Meal Types to Include</Label>
+                <div className="grid grid-cols-2 gap-4">
+                  {[
+                    { id: "breakfast", label: "Breakfast" },
+                    { id: "lunch", label: "Lunch" },
+                    { id: "dinner", label: "Dinner" },
+                    { id: "snacks", label: "Snacks" },
+                  ].map((meal) => (
+                    <div key={meal.id} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={meal.id}
+                        checked={preferences.mealTypes.includes(meal.id)}
+                        onCheckedChange={(checked) => handleMealTypeChange(meal.id, checked as boolean)}
+                      />
+                      <Label htmlFor={meal.id}>{meal.label}</Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="space-y-4">
+                <Label className="text-base font-medium">Dietary Restrictions (Optional)</Label>
+                <div className="grid grid-cols-2 gap-4">
+                  {["Vegetarian", "Vegan", "Gluten-Free", "Dairy-Free", "Keto", "Paleo", "Low-Carb", "Nut-Free"].map(
+                    (restriction) => (
+                      <div key={restriction} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={restriction}
+                          checked={preferences.dietaryRestrictions.includes(restriction)}
+                          onCheckedChange={(checked) => handleDietaryRestrictionChange(restriction, checked as boolean)}
+                        />
+                        <Label htmlFor={restriction}>{restriction}</Label>
+                      </div>
+                    ),
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )
+
+      case 4:
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Clock className="h-5 w-5" />
+                Cooking Preferences
+              </CardTitle>
+              <CardDescription>Tell us about your cooking style and available time.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <Label className="text-base font-medium">Available Cooking Time</Label>
+                <Select
+                  value={preferences.cookingTime}
+                  onValueChange={(value) => setPreferences((prev) => ({ ...prev, cookingTime: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select cooking time preference" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="quick">Quick (15-30 minutes)</SelectItem>
+                    <SelectItem value="moderate">Moderate (30-60 minutes)</SelectItem>
+                    <SelectItem value="extended">Extended (60+ minutes)</SelectItem>
+                    <SelectItem value="mixed">Mixed (variety of times)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-4">
+                <Label className="text-base font-medium">Cooking Skill Level</Label>
+                <Select
+                  value={preferences.skillLevel}
+                  onValueChange={(value) => setPreferences((prev) => ({ ...prev, skillLevel: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select your cooking skill level" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="beginner">Beginner (simple recipes)</SelectItem>
+                    <SelectItem value="intermediate">Intermediate (moderate complexity)</SelectItem>
+                    <SelectItem value="advanced">Advanced (complex techniques)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+          </Card>
+        )
+
+      default:
+        return null
+    }
+  }
+
+  return (
+    <div className="space-y-8">
+      {/* Progress Indicator */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-sm font-medium text-muted-foreground">
+              Step {currentStep} of {totalSteps}
+            </span>
+            <span className="text-sm font-medium text-muted-foreground">
+              {Math.round((currentStep / totalSteps) * 100)}% Complete
+            </span>
+          </div>
+          <div className="w-full bg-secondary rounded-full h-2">
+            <div
+              className="bg-primary h-2 rounded-full transition-all duration-300"
+              style={{ width: `${(currentStep / totalSteps) * 100}%` }}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Current Step */}
+      {renderStep()}
+
+      {/* Navigation Buttons */}
+      <div className="flex justify-between">
+        <Button
+          variant="outline"
+          onClick={() => setCurrentStep((prev) => Math.max(1, prev - 1))}
+          disabled={currentStep === 1}
+        >
+          Previous
+        </Button>
+
+        {currentStep < totalSteps ? (
+          <Button onClick={() => setCurrentStep((prev) => prev + 1)} disabled={!canProceedToNext()}>
+            Next Step
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        ) : (
+          <Link href="/recipes">
+            <Button disabled={!canProceedToNext()}>
+              Generate Meal Plan
+              <ChefHat className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+        )}
+      </div>
+
+      {/* Summary Preview */}
+      {currentStep > 1 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Planning Summary</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="font-medium">Duration:</span> {preferences.duration} days
+              </div>
+              <div>
+                <span className="font-medium">Servings:</span> {preferences.servings} people
+              </div>
+              {preferences.goal && (
+                <div>
+                  <span className="font-medium">Goal:</span> {preferences.goal.replace("-", " ")}
+                </div>
+              )}
+              {preferences.mealTypes.length > 0 && (
+                <div className="md:col-span-2">
+                  <span className="font-medium">Meals:</span>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {preferences.mealTypes.map((meal) => (
+                      <Badge key={meal} variant="secondary" className="text-xs">
+                        {meal}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {preferences.dietaryRestrictions.length > 0 && (
+                <div className="md:col-span-2">
+                  <span className="font-medium">Dietary Restrictions:</span>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {preferences.dietaryRestrictions.map((restriction) => (
+                      <Badge key={restriction} variant="outline" className="text-xs">
+                        {restriction}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  )
+}
