@@ -36,7 +36,7 @@ export default function MealPlanningPage() {
             </CardHeader>
             <CardContent className="pt-0">
               <CardDescription className="text-center text-sm">
-                Plan for any duration from 3 days to 4 weeks
+                Plan for any duration from 1 day to 4 weeks
               </CardDescription>
             </CardContent>
           </Card>

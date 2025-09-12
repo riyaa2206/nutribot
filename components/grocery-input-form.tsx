@@ -10,17 +10,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { PhotoUpload } from "@/components/photo-upload"
 import { AIChat } from "@/components/ai-chat"
-import { Plus, X, ShoppingCart, ArrowRight } from "lucide-react"
+import { Plus, X, ShoppingCart, ArrowRight, Camera, MessageCircle, Type } from "lucide-react"
 import Link from "next/link"
 
 export function GroceryInputForm() {
   const [textInput, setTextInput] = useState("")
   const [groceryItems, setGroceryItems] = useState<string[]>([])
   const [newItem, setNewItem] = useState("")
+  const [activeTab, setActiveTab] = useState("")
 
   const handleTextSubmit = () => {
     if (textInput.trim()) {
-      // Split by commas or new lines and filter empty items
       const items = textInput
         .split(/[,\n]/)
         .map((item) => item.trim())
@@ -52,6 +52,50 @@ export function GroceryInputForm() {
 
   return (
     <div className="space-y-8">
+      {/* Input Methods Overview */}
+      <div className="grid md:grid-cols-3 gap-6 mb-12">
+        <Card className="border-border hover:shadow-lg transition-shadow" onClick={() => setActiveTab("text")}>
+          <CardHeader className="text-center">
+            <div className="bg-primary/10 text-primary p-3 rounded-lg w-fit mx-auto mb-4">
+              <Type className="h-8 w-8" />
+            </div>
+            <CardTitle className="text-lg">Text Input</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CardDescription className="text-center">
+              Type or paste your grocery list. Separate items with commas or new lines.
+            </CardDescription>
+          </CardContent>
+        </Card>
+
+        <Card className="border-border hover:shadow-lg transition-shadow" onClick={() => setActiveTab("photo")}>
+          <CardHeader className="text-center">
+            <div className="bg-accent/10 text-accent p-3 rounded-lg w-fit mx-auto mb-4">
+              <Camera className="h-8 w-8" />
+            </div>
+            <CardTitle className="text-lg">Photo Upload</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CardDescription className="text-center">
+              Take a photo of your grocery list or pantry items for automatic recognition.
+            </CardDescription>
+          </CardContent>
+        </Card>
+
+        <Card className="border-border hover:shadow-lg transition-shadow" onClick={() => setActiveTab("chat")}>
+          <CardHeader className="text-center">
+            <div className="bg-primary/10 text-primary p-3 rounded-lg w-fit mx-auto mb-4">
+              <MessageCircle className="h-8 w-8" />
+            </div>
+            <CardTitle className="text-lg">AI Chat</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CardDescription className="text-center">
+              Describe what you have in natural language and let our AI understand.
+            </CardDescription>
+          </CardContent>
+        </Card>
+      </div>
       {/* Input Tabs */}
       <Card>
         <CardHeader>
@@ -62,14 +106,9 @@ export function GroceryInputForm() {
           <CardDescription>Choose your preferred method to input your grocery and pantry items.</CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="text" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="text">Text Input</TabsTrigger>
-              <TabsTrigger value="photo">Photo Upload</TabsTrigger>
-              <TabsTrigger value="chat">AI Chat</TabsTrigger>
-            </TabsList>
+          <div className="w-full">
 
-            <TabsContent value="text" className="space-y-4">
+            {activeTab === 'text' ?
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="grocery-list">Grocery List</Label>
@@ -97,16 +136,9 @@ export function GroceryInputForm() {
                   </Button>
                 </div>
               </div>
-            </TabsContent>
-
-            <TabsContent value="photo">
-              <PhotoUpload onItemsDetected={handlePhotoItems} />
-            </TabsContent>
-
-            <TabsContent value="chat">
-              <AIChat onItemsAdded={handleChatItems} />
-            </TabsContent>
-          </Tabs>
+              : activeTab === 'photo' ? <PhotoUpload onItemsDetected={handlePhotoItems} /> : activeTab === 'chat' ? <AIChat onItemsAdded={handleChatItems} /> : null
+            }
+          </div>
         </CardContent>
       </Card>
 
@@ -144,7 +176,7 @@ export function GroceryInputForm() {
         </Card>
       )}
 
-      {/* Empty State */}
+      {/* Empty State
       {groceryItems.length === 0 && (
         <Card className="border-dashed border-2 border-muted-foreground/25">
           <CardContent className="flex flex-col items-center justify-center py-12">
@@ -155,7 +187,7 @@ export function GroceryInputForm() {
             </p>
           </CardContent>
         </Card>
-      )}
+      )} */}
     </div>
   )
 }

@@ -13,6 +13,104 @@ import { Separator } from "@/components/ui/separator"
 import { Calendar, Target, ChefHat, ArrowRight, Clock } from "lucide-react"
 import Link from "next/link"
 
+const NUTRITION_GOALS = [
+  {
+    id: "balanced",
+    title: "Balanced Nutrition",
+    description: "Well-rounded meals with all food groups"
+  },
+  {
+    id: "weight-loss",
+    title: "Weight Management",
+    description: "Lower calorie, high protein meals"
+  },
+  {
+    id: "muscle-gain",
+    title: "Muscle Building",
+    description: "High protein, nutrient-dense meals"
+  },
+  {
+    id: "energy",
+    title: "Energy & Performance",
+    description: "Sustained energy for active lifestyles"
+  }
+]
+
+const MEAL_TYPES = [
+  { id: "breakfast", label: "Breakfast" },
+  { id: "lunch", label: "Lunch" },
+  { id: "dinner", label: "Dinner" },
+  { id: "snacks", label: "Snacks" },
+]
+
+const DIETARY_RESTRICTIONS = [
+  "Vegetarian", "Vegan", "Gluten-Free", "Dairy-Free",
+  "Keto", "Paleo", "Low-Carb", "Nut-Free"
+]
+
+interface SliderSectionProps {
+  label: string
+  value: number
+  onChange: (value: number) => void
+  max: number
+  min: number
+  unit: string
+  labels: string[]
+}
+
+function SliderSection({ label, value, onChange, max, min, unit, labels }: SliderSectionProps) {
+  return (
+    <div className="space-y-3">
+      <Label>{label}: {value} {unit}</Label>
+      <Slider
+        value={[value]}
+        onValueChange={(value) => onChange(value[0])}
+        max={max}
+        min={min}
+        step={1}
+        className="w-full"
+      />
+      <div className="flex justify-between text-sm text-muted-foreground">
+        {labels.map((label, index) => (
+          <span key={index}>{label}</span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+interface CheckboxGroupProps {
+  title: string
+  items: Array<{ id: string; label: string }> | string[]
+  selectedItems: string[]
+  onItemChange: (item: string, checked: boolean) => void
+}
+
+function CheckboxGroup({ title, items, selectedItems, onItemChange }: CheckboxGroupProps) {
+  return (
+    <div className="space-y-4">
+      <Label className="text-base font-medium">{title}</Label>
+      <div className="grid grid-cols-2 gap-4">
+        {items.map((item) => {
+          const id = typeof item === 'string' ? item : item.id
+          const label = typeof item === 'string' ? item : item.label
+          return (
+            <div key={id} className="flex items-center space-x-2">
+              <Checkbox
+                id={id}
+                className="border-black border-2"
+                checked={selectedItems.includes(id)}
+                onCheckedChange={(checked) => onItemChange(id, checked as boolean)}
+              />
+              <Label htmlFor={id}>{label}</Label>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 interface MealPlanPreferences {
   duration: number
   servings: number
@@ -36,6 +134,13 @@ export function MealPlanningForm() {
 
   const [currentStep, setCurrentStep] = useState(1)
   const totalSteps = 4
+
+  const updatePreference = <K extends keyof MealPlanPreferences>(
+    key: K,
+    value: MealPlanPreferences[K]
+  ) => {
+    setPreferences((prev) => ({ ...prev, [key]: value }))
+  }
 
   const handleDietaryRestrictionChange = (restriction: string, checked: boolean) => {
     setPreferences((prev) => ({
@@ -81,39 +186,25 @@ export function MealPlanningForm() {
               <CardDescription>How long do you want to plan for and how many people?</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-3">
-                <Label>Planning Duration: {preferences.duration} days</Label>
-                <Slider
-                  value={[preferences.duration]}
-                  onValueChange={(value) => setPreferences((prev) => ({ ...prev, duration: value[0] }))}
-                  max={28}
-                  min={3}
-                  step={1}
-                  className="w-full"
-                />
-                <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>3 days</span>
-                  <span>2 weeks</span>
-                  <span>4 weeks</span>
-                </div>
-              </div>
+              <SliderSection
+                label={`Planning Duration`}
+                value={preferences.duration}
+                onChange={(value) => updatePreference('duration', value)}
+                max={28}
+                min={1}
+                unit={preferences.duration === 1 ? "day" : "days"}
+                labels={["1 day", "2 weeks", "4 weeks"]}
+              />
 
-              <div className="space-y-3">
-                <Label>Number of Servings: {preferences.servings} people</Label>
-                <Slider
-                  value={[preferences.servings]}
-                  onValueChange={(value) => setPreferences((prev) => ({ ...prev, servings: value[0] }))}
-                  max={8}
-                  min={1}
-                  step={1}
-                  className="w-full"
-                />
-                <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>1 person</span>
-                  <span>4 people</span>
-                  <span>8 people</span>
-                </div>
-              </div>
+              <SliderSection
+                label="Number of Servings"
+                value={preferences.servings}
+                onChange={(value) => updatePreference('servings', value)}
+                max={8}
+                min={1}
+                unit="people"
+                labels={["1 person", "4 people", "8 people"]}
+              />
             </CardContent>
           </Card>
         )
@@ -131,48 +222,23 @@ export function MealPlanningForm() {
             <CardContent>
               <RadioGroup
                 value={preferences.goal}
-                onValueChange={(value) => setPreferences((prev) => ({ ...prev, goal: value }))}
+                onValueChange={(value) => updatePreference('goal', value)}
                 className="space-y-4"
               >
-                <div className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-secondary/50">
-                  <RadioGroupItem value="balanced" id="balanced" />
-                  <div className="flex-1">
-                    <Label htmlFor="balanced" className="font-medium">
-                      Balanced Nutrition
-                    </Label>
-                    <p className="text-sm text-muted-foreground">Well-rounded meals with all food groups</p>
+                {NUTRITION_GOALS.map((goal) => (
+                  <div key={goal.id} className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-secondary/50">
+                    <RadioGroupItem className="border-black border-2" value={goal.id} id={goal.id} />
+                    <div
+                      className="flex-1 cursor-pointer"
+                      onClick={() => updatePreference('goal', goal.id)}
+                    >
+                      <Label htmlFor={goal.id} className="font-medium cursor-pointer">
+                        {goal.title}
+                      </Label>
+                      <p className="text-sm text-muted-foreground">{goal.description}</p>
+                    </div>
                   </div>
-                </div>
-
-                <div className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-secondary/50">
-                  <RadioGroupItem value="weight-loss" id="weight-loss" />
-                  <div className="flex-1">
-                    <Label htmlFor="weight-loss" className="font-medium">
-                      Weight Management
-                    </Label>
-                    <p className="text-sm text-muted-foreground">Lower calorie, high protein meals</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-secondary/50">
-                  <RadioGroupItem value="muscle-gain" id="muscle-gain" />
-                  <div className="flex-1">
-                    <Label htmlFor="muscle-gain" className="font-medium">
-                      Muscle Building
-                    </Label>
-                    <p className="text-sm text-muted-foreground">High protein, nutrient-dense meals</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-secondary/50">
-                  <RadioGroupItem value="energy" id="energy" />
-                  <div className="flex-1">
-                    <Label htmlFor="energy" className="font-medium">
-                      Energy & Performance
-                    </Label>
-                    <p className="text-sm text-muted-foreground">Sustained energy for active lifestyles</p>
-                  </div>
-                </div>
+                ))}
               </RadioGroup>
             </CardContent>
           </Card>
@@ -189,46 +255,21 @@ export function MealPlanningForm() {
               <CardDescription>Select meal types and any dietary restrictions.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <Label className="text-base font-medium">Meal Types to Include</Label>
-                <div className="grid grid-cols-2 gap-4">
-                  {[
-                    { id: "breakfast", label: "Breakfast" },
-                    { id: "lunch", label: "Lunch" },
-                    { id: "dinner", label: "Dinner" },
-                    { id: "snacks", label: "Snacks" },
-                  ].map((meal) => (
-                    <div key={meal.id} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={meal.id}
-                        checked={preferences.mealTypes.includes(meal.id)}
-                        onCheckedChange={(checked) => handleMealTypeChange(meal.id, checked as boolean)}
-                      />
-                      <Label htmlFor={meal.id}>{meal.label}</Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <CheckboxGroup
+                title="Meal Types to Include"
+                items={MEAL_TYPES}
+                selectedItems={preferences.mealTypes}
+                onItemChange={handleMealTypeChange}
+              />
 
               <Separator />
 
-              <div className="space-y-4">
-                <Label className="text-base font-medium">Dietary Restrictions (Optional)</Label>
-                <div className="grid grid-cols-2 gap-4">
-                  {["Vegetarian", "Vegan", "Gluten-Free", "Dairy-Free", "Keto", "Paleo", "Low-Carb", "Nut-Free"].map(
-                    (restriction) => (
-                      <div key={restriction} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={restriction}
-                          checked={preferences.dietaryRestrictions.includes(restriction)}
-                          onCheckedChange={(checked) => handleDietaryRestrictionChange(restriction, checked as boolean)}
-                        />
-                        <Label htmlFor={restriction}>{restriction}</Label>
-                      </div>
-                    ),
-                  )}
-                </div>
-              </div>
+              <CheckboxGroup
+                title="Dietary Restrictions (Optional)"
+                items={DIETARY_RESTRICTIONS}
+                selectedItems={preferences.dietaryRestrictions}
+                onItemChange={handleDietaryRestrictionChange}
+              />
             </CardContent>
           </Card>
         )
@@ -248,7 +289,7 @@ export function MealPlanningForm() {
                 <Label className="text-base font-medium">Available Cooking Time</Label>
                 <Select
                   value={preferences.cookingTime}
-                  onValueChange={(value) => setPreferences((prev) => ({ ...prev, cookingTime: value }))}
+                  onValueChange={(value) => updatePreference('cookingTime', value)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select cooking time preference" />
@@ -266,7 +307,7 @@ export function MealPlanningForm() {
                 <Label className="text-base font-medium">Cooking Skill Level</Label>
                 <Select
                   value={preferences.skillLevel}
-                  onValueChange={(value) => setPreferences((prev) => ({ ...prev, skillLevel: value }))}
+                  onValueChange={(value) => updatePreference('skillLevel', value)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select your cooking skill level" />
@@ -337,7 +378,6 @@ export function MealPlanningForm() {
         )}
       </div>
 
-      {/* Summary Preview */}
       {currentStep > 1 && (
         <Card>
           <CardHeader>

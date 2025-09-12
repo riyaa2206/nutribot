@@ -25,50 +25,7 @@ export default function GroceryInputPage() {
           </p>
         </div>
 
-        {/* Input Methods Overview */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
-          <Card className="border-border hover:shadow-lg transition-shadow">
-            <CardHeader className="text-center">
-              <div className="bg-primary/10 text-primary p-3 rounded-lg w-fit mx-auto mb-4">
-                <Type className="h-8 w-8" />
-              </div>
-              <CardTitle className="text-lg">Text Input</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CardDescription className="text-center">
-                Type or paste your grocery list. Separate items with commas or new lines.
-              </CardDescription>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border hover:shadow-lg transition-shadow">
-            <CardHeader className="text-center">
-              <div className="bg-accent/10 text-accent p-3 rounded-lg w-fit mx-auto mb-4">
-                <Camera className="h-8 w-8" />
-              </div>
-              <CardTitle className="text-lg">Photo Upload</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CardDescription className="text-center">
-                Take a photo of your grocery list or pantry items for automatic recognition.
-              </CardDescription>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border hover:shadow-lg transition-shadow">
-            <CardHeader className="text-center">
-              <div className="bg-primary/10 text-primary p-3 rounded-lg w-fit mx-auto mb-4">
-                <MessageCircle className="h-8 w-8" />
-              </div>
-              <CardTitle className="text-lg">AI Chat</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CardDescription className="text-center">
-                Describe what you have in natural language and let our AI understand.
-              </CardDescription>
-            </CardContent>
-          </Card>
-        </div>
+        
 
         {/* Main Input Form */}
         <GroceryInputForm />
