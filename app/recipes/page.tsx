@@ -1,10 +1,33 @@
+'use client'
+
 import { Navigation } from "@/components/navigation"
 import { RecipeGrid } from "@/components/recipe-grid"
 import { RecipeFilters } from "@/components/recipe-filters"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChefHat, Sparkles, Clock, Users } from "lucide-react"
+import { usePrefs } from "@/context/PrefsContext"
+import raxios from "@/lib/axiosHelper"
+import { useEffect } from "react"
+
 
 export default function RecipesPage() {
+  const { preferences } = usePrefs()
+
+  const fetchRecipes = async () => {
+    try {
+      const response = await raxios.post("/meals", {
+        preferences,
+      })
+      console.log("Fetched recipes:", response.data)
+    } catch (error) {
+      console.error("Error fetching recipes:", error)
+    }
+  }
+
+  useEffect(() => {
+    fetchRecipes()
+  }, [])
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />

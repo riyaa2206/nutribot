@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Calendar, Target, ChefHat, ArrowRight, Clock } from "lucide-react"
 import Link from "next/link"
+import { usePrefs, type MealPlanPreferences } from "@/context/PrefsContext"
 
 const NUTRITION_GOALS = [
   {
@@ -111,26 +112,8 @@ function CheckboxGroup({ title, items, selectedItems, onItemChange }: CheckboxGr
   )
 }
 
-interface MealPlanPreferences {
-  duration: number
-  servings: number
-  goal: string
-  dietaryRestrictions: string[]
-  mealTypes: string[]
-  cookingTime: string
-  skillLevel: string
-}
-
 export function MealPlanningForm() {
-  const [preferences, setPreferences] = useState<MealPlanPreferences>({
-    duration: 7,
-    servings: 2,
-    goal: "",
-    dietaryRestrictions: [],
-    mealTypes: ["breakfast", "lunch", "dinner"],
-    cookingTime: "",
-    skillLevel: "",
-  })
+  const { preferences, setPreferences } = usePrefs()
 
   const [currentStep, setCurrentStep] = useState(1)
   const totalSteps = 4

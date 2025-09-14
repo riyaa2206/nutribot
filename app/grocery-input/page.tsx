@@ -1,7 +1,6 @@
 import { Navigation } from "@/components/navigation"
 import { GroceryInputForm } from "@/components/grocery-input-form"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ShoppingCart, Camera, MessageCircle, Type } from "lucide-react"
+import { ShoppingCart } from "lucide-react"
 
 export default function GroceryInputPage() {
   return (

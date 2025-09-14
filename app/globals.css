@@ -21,7 +21,7 @@
   --accent-foreground: oklch(0.25 0 0); /* Dark gray */
   --destructive: oklch(0.55 0.25 12); /* Red #e11d48 */
   --destructive-foreground: oklch(1 0 0); /* White */
-  --border: oklch(0.85 0.01 142); /* Light gray border */
+  --border: oklch(38.406% 0.00423 145.973); /* Light gray border */
   --input: oklch(0.98 0.02 142); /* Soft mint input */
   --ring: oklch(0.45 0.15 142 / 0.5); /* Green ring with opacity */
   --chart-1: oklch(0.45 0.15 142); /* Green */
