@@ -8,10 +8,10 @@ import { Home, ShoppingCart, Calendar, ChefHat, MessageCircle, Utensils } from "
 
 const navItems = [
   { href: "/", label: "Home", icon: Home },
-  { href: "/grocery-input", label: "Add Groceries", icon: ShoppingCart },
-  { href: "/meal-planning", label: "Meal Planning", icon: Calendar },
-  { href: "/recipes", label: "Recipes", icon: ChefHat },
-  { href: "/ai-chat", label: "AI Assistant", icon: MessageCircle },
+  // { href: "/grocery-input", label: "Add Groceries", icon: ShoppingCart },
+  // { href: "/meal-planning", label: "Meal Planning", icon: Calendar },
+  // { href: "/recipes", label: "Recipes", icon: ChefHat },
+  // { href: "/ai-chat", label: "AI Assistant", icon: MessageCircle },
 ]
 
 export function Navigation() {
