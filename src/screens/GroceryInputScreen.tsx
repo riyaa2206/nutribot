@@ -106,8 +106,7 @@ export default function GroceryInputScreen({ navigation }: Props) {
           style={[styles.methodCard, activeTab === 'text' && styles.activeMethodCard]}
           onPress={() => setActiveTab('text')}
         >
-          <Text style={styles.methodIcon}>📝</Text>
-          <Text style={styles.methodTitle}>Text Input</Text>
+          <Text style={styles.methodTitle}>📝 Text Input</Text>
           <Text style={styles.methodDescription}>
             Type or paste your grocery list. Separate items with commas or new lines.
           </Text>
@@ -117,8 +116,7 @@ export default function GroceryInputScreen({ navigation }: Props) {
           style={[styles.methodCard, activeTab === 'photo' && styles.activeMethodCard]}
           onPress={() => setActiveTab('photo')}
         >
-          <Text style={styles.methodIcon}>📷</Text>
-          <Text style={styles.methodTitle}>Photo Upload</Text>
+          <Text style={styles.methodTitle}>📷 Photo Upload</Text>
           <Text style={styles.methodDescription}>
             Take a photo of your grocery list or pantry items for automatic recognition.
           </Text>
@@ -128,8 +126,7 @@ export default function GroceryInputScreen({ navigation }: Props) {
           style={[styles.methodCard, activeTab === 'chat' && styles.activeMethodCard]}
           onPress={() => setActiveTab('chat')}
         >
-          <Text style={styles.methodIcon}>💬</Text>
-          <Text style={styles.methodTitle}>AI Chat</Text>
+          <Text style={styles.methodTitle}>💬 AI Chat</Text>
           <Text style={styles.methodDescription}>
             Describe what you have in natural language and let our AI understand.
           </Text>
@@ -294,7 +291,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   methodTitle: {
-    fontSize: 16,
+    fontSize: 26,
     fontWeight: '600',
     color: '#1f2937',
     marginBottom: 4,
