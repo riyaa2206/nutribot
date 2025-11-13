@@ -18,7 +18,7 @@ public class MealPlanningActivity extends AppCompatActivity {
     private TextInputEditText etNumberOfPeople;
     private RadioGroup rgDietaryGoal;
     private MaterialButton btnGeneratePlan;
-    
+
     private ArrayList<String> groceryItems;
 
     @Override
@@ -58,10 +58,8 @@ public class MealPlanningActivity extends AppCompatActivity {
     }
 
     private void generateMealPlan() {
-        String daysStr = etNumberOfDays.getText() != null ? 
-                         etNumberOfDays.getText().toString().trim() : "";
-        String peopleStr = etNumberOfPeople.getText() != null ? 
-                           etNumberOfPeople.getText().toString().trim() : "";
+        String daysStr = etNumberOfDays.getText() != null ? etNumberOfDays.getText().toString().trim() : "";
+        String peopleStr = etNumberOfPeople.getText() != null ? etNumberOfPeople.getText().toString().trim() : "";
 
         if (daysStr.isEmpty() || peopleStr.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
@@ -71,12 +69,12 @@ public class MealPlanningActivity extends AppCompatActivity {
         try {
             int days = Integer.parseInt(daysStr);
             int people = Integer.parseInt(peopleStr);
-            
+
             if (days <= 0 || days > 30) {
                 Toast.makeText(this, "Please enter days between 1 and 30", Toast.LENGTH_SHORT).show();
                 return;
             }
-            
+
             if (people <= 0 || people > 10) {
                 Toast.makeText(this, "Please enter people between 1 and 10", Toast.LENGTH_SHORT).show();
                 return;
@@ -88,19 +86,20 @@ public class MealPlanningActivity extends AppCompatActivity {
                 goal = "Weight Loss";
             } else if (selectedGoalId == R.id.rbMuscleGain) {
                 goal = "Muscle Gain";
+            } else if (selectedGoalId == R.id.rbEnergyPerf) {
+                goal = "Energy & Performance";
             }
 
             // Show success message
             String message = String.format(
-                "Generating meal plan for %d days, %d people with %s goal!\n\nUsing %d ingredients.",
-                days, people, goal, groceryItems.size()
-            );
-            
+                    "Generating meal plan for %d days, %d people with %s goal!\n\nUsing %d ingredients.",
+                    days, people, goal, groceryItems.size());
+
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 
             // In a real app, this would call an API to generate the meal plan
             // For now, just show a success message
-            
+
         } catch (NumberFormatException e) {
             Toast.makeText(this, "Please enter valid numbers", Toast.LENGTH_SHORT).show();
         }

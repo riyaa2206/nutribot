@@ -119,6 +119,12 @@
                             android:layout_height="wrap_content"
                             android:text="Muscle Gain"/>
 
+                        <RadioButton
+                            android:id="@+id/rbEnergyPerf"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Energy &amp; Performance"/>
+
                     </RadioGroup>
 
                     <com.google.android.material.button.MaterialButton
