@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NUTRIBOT</string>
+    <string name="home_title">Smart Nutrition Planning with NUTRIBOT</string>
+    <string name="home_subtitle">Transform your grocery list into personalized meal plans. Upload ingredients via text, photo, or chat with our AI to get nutritious recipes tailored to your timeframe.</string>
+    <string name="start_planning">Start Planning Meals</string>
+    <string name="chat_with_ai">Chat with AI Assistant</string>
+    
+    <string name="feature_multiple_input">Multiple Input Methods</string>
+    <string name="feature_multiple_input_desc">Add groceries via text, photo upload, or natural conversation with our AI assistant.</string>
+    <string name="feature_custom_timeframes">Custom Timeframes</string>
+    <string name="feature_custom_timeframes_desc">Plan meals for any duration - from a few days to several weeks based on your needs.</string>
+    <string name="feature_smart_recipes">Smart Recipe Generation</string>
+    <string name="feature_smart_recipes_desc">Get personalized, nutritious recipes that make the most of your available ingredients.</string>
+    <string name="feature_ai_assistant">AI-Powered Assistant</string>
+    <string name="feature_ai_assistant_desc">Chat naturally about your dietary preferences and get instant nutrition advice.</string>
+    
+    <string name="grocery_title">Add Your Groceries &amp; Pantry Items</string>
+    <string name="grocery_subtitle">Choose your preferred method to input ingredients. We support text lists, photo uploads, and natural conversation.</string>
+    <string name="text_input">Text Input</string>
+    <string name="text_input_desc">Type or paste your grocery list. Separate items with commas or new lines.</string>
+    <string name="photo_upload">Photo Upload</string>
+    <string name="photo_upload_desc">Take a photo of your grocery list or pantry items for automatic recognition.</string>
+    <string name="ai_chat">AI Chat</string>
+    <string name="ai_chat_desc">Describe what you have in natural language and let our AI understand.</string>
+    
+    <string name="add_ingredients">Add Your Ingredients</string>
+    <string name="grocery_list_hint">Enter your grocery items separated by commas or new lines:\n\nApples, Bananas, Chicken breast\nRice\nBroccoli\nOlive oil</string>
+    <string name="add_items_from_list">Add Items from List</string>
+    <string name="add_single_item_hint">Add single item...</string>
+    <string name="your_ingredients">Your Ingredients (%d items)</string>
+    <string name="review_ingredients">Review your ingredients before proceeding to meal planning.</string>
+    <string name="clear_all">Clear All</string>
+    <string name="continue_meal_planning">Continue to Meal Planning</string>
+    
+    <string name="ai_chat_title">AI Nutrition Assistant</string>
+    <string name="ai_chat_subtitle">Chat with our intelligent nutrition assistant for personalized meal advice, recipe suggestions, and dietary guidance tailored to your goals.</string>
+    <string name="quick_questions">Quick Questions</string>
+    <string name="nutrition_assistant_chat">Nutrition Assistant Chat</string>
+    <string name="chat_input_hint">Ask me about nutrition, recipes, meal planning...</string>
+    <string name="chat_placeholder">Ask about recipes, meal planning, nutrition advice, or dietary guidance</string>
+    
+    <string name="meal_planning_title">Plan Your Nutritious Meals</string>
+    <string name="meal_planning_subtitle">Set your meal planning preferences and timeframe. We\'ll generate a personalized nutrition plan based on your available ingredients.</string>
+    
+    <string name="recipes_title">Browse Recipes</string>
+    
+    <string name="take_photo">Take Photo</string>
+    <string name="choose_from_gallery">Choose from Gallery</string>
+    <string name="cancel">Cancel</string>
+    <string name="send">Send</string>
+    
+    <string name="stat_time">5 min</string>
+    <string name="stat_time_desc">Average time to generate meal plans</string>
+    <string name="stat_recipes">10K+</string>
+    <string name="stat_recipes_desc">Recipes in our database</string>
+    <string name="stat_satisfaction">95%</string>
+    <string name="stat_satisfaction_desc">User satisfaction rate</string>
+    
+    <string name="ready_transform">Ready to Transform Your Meal Planning?</string>
+    <string name="join_users">Join thousands of users who have revolutionized their nutrition with NUTRIBOT\'s intelligent meal planning.</string>
+    <string name="get_started">Get Started Now</string>
+    
+    <string name="everything_need">Everything You Need for Smart Nutrition</string>
+    <string name="multiple_ways">Multiple ways to input your ingredients, intelligent meal planning, and personalized recipe generation.</string>
+</resources>
