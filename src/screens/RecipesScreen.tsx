@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   ScrollView,
   TouchableOpacity,
   Modal,
@@ -13,6 +12,7 @@ import { RootTabParamList } from '../navigation/AppNavigator';
 import { usePrefs } from '../context/PrefsContext';
 import raxios from '../utils/axiosHelper';
 import { Recipe } from '../types';
+import { globalStyles, colors } from '../styles/globalStyles';
 
 type RecipesScreenNavigationProp = BottomTabNavigationProp<RootTabParamList, 'Recipes'>;
 
@@ -239,91 +239,91 @@ export default function RecipesScreen({ navigation }: Props) {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerIcon}>👨‍🍳</Text>
-        <Text style={styles.headerTitle}>Your Personalized Recipe Collection</Text>
-        <Text style={styles.headerSubtitle}>
+    <ScrollView style={globalStyles.container}>
+      <View style={globalStyles.header}>
+        <Text style={globalStyles.headerIcon}>👨‍🍳</Text>
+        <Text style={globalStyles.headerTitle}>Your Personalized Recipe Collection</Text>
+        <Text style={globalStyles.headerSubtitle}>
           AI-generated recipes tailored to your ingredients, preferences, and nutrition goals. Each recipe is optimized for your meal planning timeline.
         </Text>
       </View>
 
       {/* Generation Status */}
-      <View style={styles.statusCard}>
-        <Text style={styles.statusTitle}>✨ Recipe Generation Complete</Text>
-        <Text style={styles.statusDescription}>
+      <View style={globalStyles.statusCard}>
+        <Text style={globalStyles.statusTitle}>✨ Recipe Generation Complete</Text>
+        <Text style={globalStyles.statusDescription}>
           Generated 24 personalized recipes based on your ingredients and 7-day meal plan for 2 people.
         </Text>
-        <View style={styles.statusMetrics}>
-          <Text style={styles.metricText}>⏱️ Avg. 25 min cook time</Text>
-          <Text style={styles.metricText}>👥 2 servings each</Text>
-          <Text style={styles.metricText}>👨‍🍳 Balanced nutrition</Text>
-          <Text style={styles.metricText}>✨ 95% ingredient match</Text>
+        <View style={globalStyles.statusMetrics}>
+          <Text style={globalStyles.metricText}>⏱️ Avg. 25 min cook time</Text>
+          <Text style={globalStyles.metricText}>👥 2 servings each</Text>
+          <Text style={globalStyles.metricText}>👨‍🍳 Balanced nutrition</Text>
+          <Text style={globalStyles.metricText}>✨ 95% ingredient match</Text>
         </View>
       </View>
 
       {/* Recipe Grid */}
-      <View style={styles.recipesSection}>
-        <Text style={styles.recipesTitle}>Your Recipes ({mockRecipes.length})</Text>
+      <View style={globalStyles.stepContainer}>
+        <Text style={globalStyles.stepTitle}>Your Recipes ({mockRecipes.length})</Text>
 
         {mockRecipes.map((recipe) => (
           <TouchableOpacity
             key={recipe.id}
-            style={styles.recipeCard}
+            style={globalStyles.recipeCard}
             onPress={() => setSelectedRecipe(recipe)}
           >
-            <View style={styles.recipeHeader}>
-              <View style={styles.recipeHeaderText}>
-                <Text style={styles.recipeTitle}>{recipe.title}</Text>
-                <Text style={styles.recipeRating}>⭐ {recipe.rating}</Text>
+            <View style={globalStyles.recipeHeader}>
+              <View style={globalStyles.recipeHeaderText}>
+                <Text style={globalStyles.recipeTitle}>{recipe.title}</Text>
+                <Text style={globalStyles.recipeRating}>⭐ {recipe.rating}</Text>
               </View>
               <View
                 style={[
-                  styles.difficultyBadge,
+                  globalStyles.difficultyBadge,
                   { backgroundColor: getDifficultyColor(recipe.difficulty) },
                 ]}
               >
-                <Text style={styles.difficultyText}>{recipe.difficulty}</Text>
+                <Text style={globalStyles.difficultyText}>{recipe.difficulty}</Text>
               </View>
             </View>
 
-            <Text style={styles.recipeDescription}>{recipe.description}</Text>
+            <Text style={globalStyles.cardDescription}>{recipe.description}</Text>
 
-            <View style={styles.recipeMetrics}>
-              <Text style={styles.metricItem}>⏱️ {recipe.cookTime} min</Text>
-              <Text style={styles.metricItem}>👥 {recipe.servings} servings</Text>
-              <Text style={styles.metricItem}>{recipe.mealType}</Text>
+            <View style={globalStyles.recipeMetrics}>
+              <Text style={globalStyles.metricItem}>⏱️ {recipe.cookTime} min</Text>
+              <Text style={globalStyles.metricItem}>👥 {recipe.servings} servings</Text>
+              <Text style={globalStyles.metricItem}>{recipe.mealType}</Text>
             </View>
 
-            <View style={styles.recipeTags}>
+            <View style={globalStyles.recipeTags}>
               {recipe.tags.map((tag) => (
-                <View key={tag} style={styles.tag}>
-                  <Text style={styles.tagText}>{tag}</Text>
+                <View key={tag} style={globalStyles.tag}>
+                  <Text style={globalStyles.tagText}>{tag}</Text>
                 </View>
               ))}
             </View>
 
-            <View style={styles.nutritionGrid}>
-              <View style={styles.nutritionItem}>
-                <Text style={styles.nutritionValue}>{recipe.nutrition.calories}</Text>
-                <Text style={styles.nutritionLabel}>cal</Text>
+            <View style={globalStyles.nutritionGrid}>
+              <View style={globalStyles.nutritionItem}>
+                <Text style={globalStyles.nutritionValue}>{recipe.nutrition.calories}</Text>
+                <Text style={globalStyles.nutritionLabel}>cal</Text>
               </View>
-              <View style={styles.nutritionItem}>
-                <Text style={styles.nutritionValue}>{recipe.nutrition.protein}g</Text>
-                <Text style={styles.nutritionLabel}>protein</Text>
+              <View style={globalStyles.nutritionItem}>
+                <Text style={globalStyles.nutritionValue}>{recipe.nutrition.protein}g</Text>
+                <Text style={globalStyles.nutritionLabel}>protein</Text>
               </View>
-              <View style={styles.nutritionItem}>
-                <Text style={styles.nutritionValue}>{recipe.nutrition.carbs}g</Text>
-                <Text style={styles.nutritionLabel}>carbs</Text>
+              <View style={globalStyles.nutritionItem}>
+                <Text style={globalStyles.nutritionValue}>{recipe.nutrition.carbs}g</Text>
+                <Text style={globalStyles.nutritionLabel}>carbs</Text>
               </View>
-              <View style={styles.nutritionItem}>
-                <Text style={styles.nutritionValue}>{recipe.nutrition.fat}g</Text>
-                <Text style={styles.nutritionLabel}>fat</Text>
+              <View style={globalStyles.nutritionItem}>
+                <Text style={globalStyles.nutritionValue}>{recipe.nutrition.fat}g</Text>
+                <Text style={globalStyles.nutritionLabel}>fat</Text>
               </View>
             </View>
 
-            <TouchableOpacity style={styles.viewButton}>
-              <Text style={styles.viewButtonText}>👨‍🍳 View Recipe</Text>
+            <TouchableOpacity style={globalStyles.viewButton}>
+              <Text style={globalStyles.viewButtonText}>👨‍🍳 View Recipe</Text>
             </TouchableOpacity>
           </TouchableOpacity>
         ))}
@@ -332,38 +332,38 @@ export default function RecipesScreen({ navigation }: Props) {
       {/* Recipe Modal */}
       <Modal visible={!!selectedRecipe} animationType="slide" onRequestClose={() => setSelectedRecipe(null)}>
         {selectedRecipe && (
-          <ScrollView style={styles.modalContainer}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>{selectedRecipe.title}</Text>
-              <TouchableOpacity onPress={() => setSelectedRecipe(null)} style={styles.closeButton}>
-                <Text style={styles.closeButtonText}>×</Text>
+          <ScrollView style={globalStyles.modalContainer}>
+            <View style={globalStyles.modalHeader}>
+              <Text style={globalStyles.modalTitle}>{selectedRecipe.title}</Text>
+              <TouchableOpacity onPress={() => setSelectedRecipe(null)} style={globalStyles.closeButton}>
+                <Text style={globalStyles.closeButtonText}>×</Text>
               </TouchableOpacity>
             </View>
 
-            <Text style={styles.modalDescription}>{selectedRecipe.description}</Text>
+            <Text style={globalStyles.cardDescription}>{selectedRecipe.description}</Text>
 
-            <View style={styles.modalSection}>
-              <Text style={styles.modalSectionTitle}>Ingredients</Text>
+            <View style={globalStyles.modalSection}>
+              <Text style={globalStyles.modalSectionTitle}>Ingredients</Text>
               {selectedRecipe.ingredients.map((ingredient, idx) => (
-                <Text key={idx} style={styles.modalListItem}>• {ingredient}</Text>
+                <Text key={idx} style={globalStyles.modalListItem}>• {ingredient}</Text>
               ))}
             </View>
 
-            <View style={styles.modalSection}>
-              <Text style={styles.modalSectionTitle}>Instructions</Text>
+            <View style={globalStyles.modalSection}>
+              <Text style={globalStyles.modalSectionTitle}>Instructions</Text>
               {selectedRecipe.instructions.map((instruction, idx) => (
-                <Text key={idx} style={styles.modalListItem}>
+                <Text key={idx} style={globalStyles.modalListItem}>
                   {idx + 1}. {instruction}
                 </Text>
               ))}
             </View>
 
-            <View style={styles.modalSection}>
-              <Text style={styles.modalSectionTitle}>Nutrition Information</Text>
-              <Text style={styles.modalListItem}>Calories: {selectedRecipe.nutrition.calories}</Text>
-              <Text style={styles.modalListItem}>Protein: {selectedRecipe.nutrition.protein}g</Text>
-              <Text style={styles.modalListItem}>Carbs: {selectedRecipe.nutrition.carbs}g</Text>
-              <Text style={styles.modalListItem}>Fat: {selectedRecipe.nutrition.fat}g</Text>
+            <View style={globalStyles.modalSection}>
+              <Text style={globalStyles.modalSectionTitle}>Nutrition Information</Text>
+              <Text style={globalStyles.modalListItem}>Calories: {selectedRecipe.nutrition.calories}</Text>
+              <Text style={globalStyles.modalListItem}>Protein: {selectedRecipe.nutrition.protein}g</Text>
+              <Text style={globalStyles.modalListItem}>Carbs: {selectedRecipe.nutrition.carbs}g</Text>
+              <Text style={globalStyles.modalListItem}>Fat: {selectedRecipe.nutrition.fat}g</Text>
             </View>
           </ScrollView>
         )}
@@ -371,214 +371,3 @@ export default function RecipesScreen({ navigation }: Props) {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f9fafb',
-  },
-  header: {
-    padding: 24,
-    alignItems: 'center',
-  },
-  headerIcon: {
-    fontSize: 48,
-    marginBottom: 16,
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1f2937',
-    textAlign: 'center',
-    marginBottom: 12,
-  },
-  headerSubtitle: {
-    fontSize: 14,
-    color: '#6b7280',
-    textAlign: 'center',
-  },
-  statusCard: {
-    backgroundColor: '#eff6ff',
-    borderWidth: 1,
-    borderColor: '#3b82f6',
-    borderRadius: 8,
-    padding: 16,
-    margin: 16,
-  },
-  statusTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#3b82f6',
-    marginBottom: 8,
-  },
-  statusDescription: {
-    fontSize: 13,
-    color: '#6b7280',
-    marginBottom: 12,
-  },
-  statusMetrics: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-  },
-  metricText: {
-    fontSize: 12,
-    color: '#6b7280',
-  },
-  recipesSection: {
-    padding: 16,
-  },
-  recipesTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#1f2937',
-    marginBottom: 16,
-  },
-  recipeCard: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-    padding: 16,
-    marginBottom: 16,
-  },
-  recipeHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 8,
-  },
-  recipeHeaderText: {
-    flex: 1,
-  },
-  recipeTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1f2937',
-    marginBottom: 4,
-  },
-  recipeRating: {
-    fontSize: 13,
-    color: '#6b7280',
-  },
-  difficultyBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 4,
-  },
-  difficultyText: {
-    fontSize: 12,
-    color: '#fff',
-    fontWeight: '600',
-  },
-  recipeDescription: {
-    fontSize: 13,
-    color: '#6b7280',
-    marginBottom: 12,
-  },
-  recipeMetrics: {
-    flexDirection: 'row',
-    gap: 16,
-    marginBottom: 12,
-  },
-  metricItem: {
-    fontSize: 12,
-    color: '#6b7280',
-  },
-  recipeTags: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
-    marginBottom: 12,
-  },
-  tag: {
-    backgroundColor: '#f3f4f6',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 4,
-  },
-  tagText: {
-    fontSize: 11,
-    color: '#1f2937',
-  },
-  nutritionGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 12,
-    borderTopWidth: 1,
-    borderTopColor: '#e5e7eb',
-    marginBottom: 12,
-  },
-  nutritionItem: {
-    alignItems: 'center',
-  },
-  nutritionValue: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1f2937',
-  },
-  nutritionLabel: {
-    fontSize: 11,
-    color: '#6b7280',
-  },
-  viewButton: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  viewButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1f2937',
-  },
-  modalContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-    padding: 16,
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  modalTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#1f2937',
-    flex: 1,
-  },
-  closeButton: {
-    width: 32,
-    height: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  closeButtonText: {
-    fontSize: 32,
-    color: '#6b7280',
-  },
-  modalDescription: {
-    fontSize: 14,
-    color: '#6b7280',
-    marginBottom: 20,
-  },
-  modalSection: {
-    marginBottom: 24,
-  },
-  modalSectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1f2937',
-    marginBottom: 12,
-  },
-  modalListItem: {
-    fontSize: 14,
-    color: '#1f2937',
-    marginBottom: 8,
-    lineHeight: 20,
-  },
-});

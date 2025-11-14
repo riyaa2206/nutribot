@@ -2,13 +2,13 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // For Android emulator, use 10.0.2.2 to access localhost
-const LOCAL_URL = 'http://192.168.192.188:8080/con';
+const LOCAL_URL = 'http://192.168.1.3:8080/con';
 const PRODUCTION_URL = 'https://uo5exhg7ej.execute-api.ap-south-1.amazonaws.com/main/con';
 
 const ENV = process.env.NODE_ENV || 'development';
 export const BASE_URL = ENV === 'production' ? PRODUCTION_URL : LOCAL_URL;
 
-const Raxios = axios.create({ baseURL: BASE_URL });
+const Raxios = axios.create({ baseURL: PRODUCTION_URL });
 
 Raxios.interceptors.request.use(
     async (config) => {

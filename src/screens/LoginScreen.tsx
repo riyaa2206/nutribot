@@ -4,7 +4,6 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    StyleSheet,
     Alert,
     ActivityIndicator,
     KeyboardAvoidingView,
@@ -14,7 +13,8 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Raxios from '../utils/axiosHelper';
 import { useNavigation } from '@react-navigation/native';
-import { useAuth } from '../context/AuthContext'; export default function LoginScreen() {
+import { useAuth } from '../context/AuthContext';
+import { globalStyles, colors } from '../styles/globalStyles'; export default function LoginScreen() {
     const [emailOrPhone, setEmailOrPhone] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -45,8 +45,6 @@ import { useAuth } from '../context/AuthContext'; export default function LoginS
             }
 
             const response = await Raxios.post('/nlogin', payload);
-            console.debug("🚀 ~ handleLogin ~ response:", response)
-
 
             if (response.data.status === 'SUCCESS') {
                 const { access, refresh } = response.data.data.tokens;
@@ -98,17 +96,17 @@ import { useAuth } from '../context/AuthContext'; export default function LoginS
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.container}
+            style={globalStyles.container}
         >
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <View style={styles.content}>
-                    <Text style={styles.title}>NUTRIBOT</Text>
-                    <Text style={styles.subtitle}>Login to your account</Text>
+            <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
+                <View style={globalStyles.content}>
+                    <Text style={globalStyles.titleLarge}>NUTRIBOT</Text>
+                    <Text style={globalStyles.subtitle}>Login to your account</Text>
 
-                    <View style={styles.form}>
-                        <Text style={styles.label}>Email or Phone</Text>
+                    <View style={globalStyles.form}>
+                        <Text style={globalStyles.label}>Email or Phone</Text>
                         <TextInput
-                            style={styles.input}
+                            style={globalStyles.input}
                             placeholder="Enter email or phone number"
                             value={emailOrPhone}
                             onChangeText={setEmailOrPhone}
@@ -116,9 +114,9 @@ import { useAuth } from '../context/AuthContext'; export default function LoginS
                             keyboardType="email-address"
                         />
 
-                        <Text style={styles.label}>Password</Text>
+                        <Text style={globalStyles.label}>Password</Text>
                         <TextInput
-                            style={styles.input}
+                            style={globalStyles.input}
                             placeholder="Enter password"
                             value={password}
                             onChangeText={setPassword}
@@ -126,21 +124,21 @@ import { useAuth } from '../context/AuthContext'; export default function LoginS
                         />
 
                         <TouchableOpacity
-                            style={[styles.button, loading && styles.buttonDisabled]}
+                            style={[globalStyles.button, loading && globalStyles.buttonDisabled]}
                             onPress={handleLogin}
                             disabled={loading}
                         >
                             {loading ? (
-                                <ActivityIndicator color="#fff" />
+                                <ActivityIndicator color={colors.white} />
                             ) : (
-                                <Text style={styles.buttonText}>Login</Text>
+                                <Text style={globalStyles.buttonText}>Login</Text>
                             )}
                         </TouchableOpacity>
 
-                        <View style={styles.signupContainer}>
-                            <Text style={styles.signupText}>Don't have an account? </Text>
+                        <View style={globalStyles.linkContainer}>
+                            <Text style={globalStyles.linkText}>Don't have an account? </Text>
                             <TouchableOpacity onPress={navigateToSignup}>
-                                <Text style={styles.signupLink}>Sign Up</Text>
+                                <Text style={globalStyles.link}>Sign Up</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -149,79 +147,3 @@ import { useAuth } from '../context/AuthContext'; export default function LoginS
         </KeyboardAvoidingView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#f9fafb',
-    },
-    scrollContainer: {
-        flexGrow: 1,
-    },
-    content: {
-        flex: 1,
-        padding: 24,
-        justifyContent: 'center',
-    },
-    title: {
-        fontSize: 32,
-        fontWeight: 'bold',
-        color: '#3b82f6',
-        textAlign: 'center',
-        marginBottom: 8,
-    },
-    subtitle: {
-        fontSize: 16,
-        color: '#6b7280',
-        textAlign: 'center',
-        marginBottom: 32,
-    },
-    form: {
-        width: '100%',
-    },
-    label: {
-        fontSize: 14,
-        fontWeight: '600',
-        color: '#374151',
-        marginBottom: 8,
-    },
-    input: {
-        backgroundColor: '#fff',
-        borderWidth: 1,
-        borderColor: '#d1d5db',
-        borderRadius: 8,
-        padding: 12,
-        fontSize: 16,
-        color: '#374151',
-        marginBottom: 16
-    },
-    button: {
-        backgroundColor: '#3b82f6',
-        padding: 16,
-        borderRadius: 8,
-        alignItems: 'center',
-        marginTop: 8,
-    },
-    buttonDisabled: {
-        opacity: 0.6,
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 16,
-        fontWeight: '600',
-    },
-    signupContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginTop: 24,
-    },
-    signupText: {
-        color: '#6b7280',
-        fontSize: 14,
-    },
-    signupLink: {
-        color: '#3b82f6',
-        fontSize: 14,
-        fontWeight: '600',
-    },
-});
