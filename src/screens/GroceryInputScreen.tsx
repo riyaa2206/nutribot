@@ -7,11 +7,11 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../navigation/AppNavigator';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { RootTabParamList } from '../navigation/AppNavigator';
 import { usePrefs } from '../context/PrefsContext';
 
-type GroceryInputScreenNavigationProp = StackNavigationProp<RootStackParamList, 'GroceryInput'>;
+type GroceryInputScreenNavigationProp = BottomTabNavigationProp<RootTabParamList, 'GroceryInput'>;
 
 interface Props {
   navigation: GroceryInputScreenNavigationProp;

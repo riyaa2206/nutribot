@@ -6,11 +6,11 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../navigation/AppNavigator';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { RootTabParamList } from '../navigation/AppNavigator';
 import { usePrefs } from '../context/PrefsContext';
 
-type MealPlanningScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MealPlanning'>;
+type MealPlanningScreenNavigationProp = BottomTabNavigationProp<RootTabParamList, 'MealPlanning'>;
 
 interface Props {
   navigation: MealPlanningScreenNavigationProp;

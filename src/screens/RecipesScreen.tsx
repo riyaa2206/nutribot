@@ -8,13 +8,13 @@ import {
   Modal,
   Image,
 } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../navigation/AppNavigator';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { RootTabParamList } from '../navigation/AppNavigator';
 import { usePrefs } from '../context/PrefsContext';
 import raxios from '../utils/axiosHelper';
 import { Recipe } from '../types';
 
-type RecipesScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Recipes'>;
+type RecipesScreenNavigationProp = BottomTabNavigationProp<RootTabParamList, 'Recipes'>;
 
 interface Props {
   navigation: RecipesScreenNavigationProp;
@@ -265,7 +265,7 @@ export default function RecipesScreen({ navigation }: Props) {
       {/* Recipe Grid */}
       <View style={styles.recipesSection}>
         <Text style={styles.recipesTitle}>Your Recipes ({mockRecipes.length})</Text>
-        
+
         {mockRecipes.map((recipe) => (
           <TouchableOpacity
             key={recipe.id}
