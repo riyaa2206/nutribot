@@ -28,20 +28,13 @@ export default function HomeScreen({ navigation }: Props) {
           Transform your grocery list into personalized meal plans. Upload ingredients via text, photo, or chat
           with our AI to get nutritious recipes tailored to your timeframe.
         </Text>
-        
+
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.primaryButton}
             onPress={() => navigation.navigate('GroceryInput')}
           >
-            <Text style={styles.primaryButtonText}>Start Planning Meals</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity
-            style={styles.secondaryButton}
-            onPress={() => navigation.navigate('AIChat')}
-          >
-            <Text style={styles.secondaryButtonText}>Chat with AI Assistant</Text>
+            <Text style={styles.primaryButtonText}>Get Started</Text>
           </TouchableOpacity>
         </View>
       </View>

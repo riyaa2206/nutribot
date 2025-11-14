@@ -6,11 +6,10 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  Alert,
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
-import * as ImagePicker from 'expo-image-picker';
+import { usePrefs } from '../context/PrefsContext';
 
 type GroceryInputScreenNavigationProp = StackNavigationProp<RootStackParamList, 'GroceryInput'>;
 
@@ -19,12 +18,11 @@ interface Props {
 }
 
 export default function GroceryInputScreen({ navigation }: Props) {
-  const [activeTab, setActiveTab] = useState('');
+  const { setPreferences } = usePrefs();
+  const [newItem, setNewItem] = useState('');
   const [textInput, setTextInput] = useState('');
   const [groceryItems, setGroceryItems] = useState<string[]>([]);
-  const [newItem, setNewItem] = useState('');
-  const [chatMessage, setChatMessage] = useState('');
-  const [chatMessages, setChatMessages] = useState<Array<{ text: string; sender: 'user' | 'ai' }>>([]);
+  const [userChoice, setUserChoice] = useState<'have' | 'need' | null>(null);
 
   const handleTextSubmit = () => {
     if (textInput.trim()) {
@@ -49,198 +47,134 @@ export default function GroceryInputScreen({ navigation }: Props) {
     setGroceryItems((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handlePhotoUpload = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (permissionResult.granted === false) {
-      Alert.alert('Permission Required', 'Permission to access camera roll is required!');
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
-      allowsEditing: true,
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      // Simulate OCR processing
-      Alert.alert('Photo Processing', 'Photo uploaded! In a real app, this would use OCR to detect items.');
-      // Mock detected items
-      const mockItems = ['Apples', 'Bananas', 'Milk', 'Bread'];
-      setGroceryItems((prev) => [...prev, ...mockItems]);
-    }
+  const handleHaveIngredients = () => {
+    setUserChoice('have');
   };
 
-  const handleChatSend = () => {
-    if (chatMessage.trim()) {
-      setChatMessages((prev) => [...prev, { text: chatMessage, sender: 'user' }]);
-      
-      // Simulate AI response
-      setTimeout(() => {
-        const response = `I understand you mentioned: "${chatMessage}". I'll add some items based on that.`;
-        setChatMessages((prev) => [...prev, { text: response, sender: 'ai' }]);
-        
-        // Mock extracted items
-        const mockItems = ['Item 1', 'Item 2', 'Item 3'];
-        setGroceryItems((prev) => [...prev, ...mockItems]);
-      }, 1000);
-      
-      setChatMessage('');
-    }
+  const handleNeedIngredients = () => {
+    setUserChoice('need');
+    // Navigate directly to meal planning if they want to get ingredients
+    navigation.navigate('MealPlanning');
+  };
+
+  const handleContinue = () => {
+    // Update groceries in preferences context
+    setPreferences((prev) => ({
+      ...prev,
+      groceries: groceryItems,
+    }));
+    navigation.navigate('MealPlanning');
   };
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerIcon}>🛒</Text>
-        <Text style={styles.headerTitle}>Add Your Groceries & Pantry Items</Text>
-        <Text style={styles.headerSubtitle}>
-          Choose your preferred method to input ingredients. We support text lists, photo uploads, and natural conversation.
-        </Text>
-      </View>
+      {!userChoice ? (
+        // Initial choice screen
+        <View style={styles.choiceContainer}>
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>🛒 Let's Get Started!</Text>
+            <Text style={styles.choiceTitle}>
+              Do you want recipes based on what you already have, or recipes to help you plan your shopping?
+            </Text>
+          </View>
 
-      {/* Input Method Cards */}
-      <View style={styles.methodsContainer}>
-        <TouchableOpacity
-          style={[styles.methodCard, activeTab === 'text' && styles.activeMethodCard]}
-          onPress={() => setActiveTab('text')}
-        >
-          <Text style={styles.methodTitle}>📝 Text Input</Text>
-          <Text style={styles.methodDescription}>
-            Type or paste your grocery list. Separate items with commas or new lines.
-          </Text>
-        </TouchableOpacity>
+          <View style={styles.choiceButtons}>
+            <TouchableOpacity
+              style={styles.choiceCard}
+              onPress={handleHaveIngredients}
+            >
+              <Text style={styles.choiceIcon}>✅</Text>
+              <Text style={styles.choiceTitle}>I Have Ingredients</Text>
+              <Text style={styles.choiceDescription}>
+                Enter the groceries/ingredients you already have and get recipes you can make now
+              </Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.methodCard, activeTab === 'photo' && styles.activeMethodCard]}
-          onPress={() => setActiveTab('photo')}
-        >
-          <Text style={styles.methodTitle}>📷 Photo Upload</Text>
-          <Text style={styles.methodDescription}>
-            Take a photo of your grocery list or pantry items for automatic recognition.
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.methodCard, activeTab === 'chat' && styles.activeMethodCard]}
-          onPress={() => setActiveTab('chat')}
-        >
-          <Text style={styles.methodTitle}>💬 AI Chat</Text>
-          <Text style={styles.methodDescription}>
-            Describe what you have in natural language and let our AI understand.
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Active Tab Content */}
-      {activeTab === 'text' && (
-        <View style={styles.inputSection}>
-          <Text style={styles.inputLabel}>Grocery List</Text>
-          <TextInput
-            style={styles.textArea}
-            placeholder="Enter your grocery items separated by commas or new lines:&#10;&#10;Apples, Bananas, Chicken breast&#10;Rice&#10;Broccoli&#10;Olive oil"
-            value={textInput}
-            onChangeText={setTextInput}
-            multiline
-            numberOfLines={6}
-          />
-          <TouchableOpacity style={styles.button} onPress={handleTextSubmit}>
-            <Text style={styles.buttonText}>Add Items from List</Text>
-          </TouchableOpacity>
-
-          <View style={styles.singleItemContainer}>
-            <TextInput
-              style={styles.singleItemInput}
-              placeholder="Add single item..."
-              value={newItem}
-              onChangeText={setNewItem}
-              onSubmitEditing={handleAddSingleItem}
-            />
-            <TouchableOpacity style={styles.addButton} onPress={handleAddSingleItem}>
-              <Text style={styles.addButtonText}>+</Text>
+            <TouchableOpacity
+              style={styles.choiceCard}
+              onPress={handleNeedIngredients}
+            >
+              <Text style={styles.choiceIcon}>📋</Text>
+              <Text style={styles.choiceTitle}>I Need to Get Ingredients</Text>
+              <Text style={styles.choiceDescription}>
+                Plan your meals first and get a shopping list of what you need
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
-      )}
+      ) : (
+        // Text input screen (only shown if user chose "I Have Ingredients")
+        <>
+          <View style={styles.header}>
+            <Text style={styles.headerIcon}>🛒</Text>
+            <Text style={styles.headerTitle}>Enter Your Ingredients</Text>
+            <Text style={styles.headerSubtitle}>
+              Add the groceries and ingredients you have available
+            </Text>
+          </View>
 
-      {activeTab === 'photo' && (
-        <View style={styles.inputSection}>
-          <Text style={styles.inputLabel}>Upload Photo</Text>
-          <TouchableOpacity style={styles.uploadButton} onPress={handlePhotoUpload}>
-            <Text style={styles.uploadButtonText}>📸 Choose Photo</Text>
-          </TouchableOpacity>
-          <Text style={styles.helpText}>
-            Upload a photo of your grocery list or pantry items. Our AI will detect the items automatically.
-          </Text>
-        </View>
-      )}
+          <View style={styles.inputSection}>
+            <Text style={styles.inputLabel}>Grocery List</Text>
+            <TextInput
+              style={styles.textArea}
+              placeholder="Enter your grocery items separated by commas or new lines:&#10;&#10;Apples, Bananas, Chicken breast&#10;Rice&#10;Broccoli&#10;Olive oil"
+              value={textInput}
+              onChangeText={setTextInput}
+              multiline
+              numberOfLines={6}
+            />
+            <TouchableOpacity style={styles.button} onPress={handleTextSubmit}>
+              <Text style={styles.buttonText}>Add Items from List</Text>
+            </TouchableOpacity>
 
-      {activeTab === 'chat' && (
-        <View style={styles.inputSection}>
-          <Text style={styles.inputLabel}>Chat with AI</Text>
-          <View style={styles.chatContainer}>
-            <ScrollView style={styles.chatMessages}>
-              {chatMessages.map((msg, idx) => (
-                <View
-                  key={idx}
-                  style={[
-                    styles.chatBubble,
-                    msg.sender === 'user' ? styles.userBubble : styles.aiBubble,
-                  ]}
-                >
-                  <Text style={styles.chatText}>{msg.text}</Text>
-                </View>
-              ))}
-            </ScrollView>
-            <View style={styles.chatInputContainer}>
+            <View style={styles.singleItemContainer}>
               <TextInput
-                style={styles.chatInput}
-                placeholder="Describe what you have..."
-                value={chatMessage}
-                onChangeText={setChatMessage}
-                onSubmitEditing={handleChatSend}
+                style={styles.singleItemInput}
+                placeholder="Add single item..."
+                value={newItem}
+                onChangeText={setNewItem}
+                onSubmitEditing={handleAddSingleItem}
               />
-              <TouchableOpacity style={styles.sendButton} onPress={handleChatSend}>
-                <Text style={styles.sendButtonText}>Send</Text>
+              <TouchableOpacity style={styles.addButton} onPress={handleAddSingleItem}>
+                <Text style={styles.addButtonText}>+</Text>
               </TouchableOpacity>
             </View>
           </View>
-        </View>
-      )}
 
-      {/* Current Items Display */}
-      {groceryItems.length > 0 && (
-        <View style={styles.itemsSection}>
-          <Text style={styles.itemsTitle}>Your Ingredients ({groceryItems.length} items)</Text>
-          <Text style={styles.itemsSubtitle}>Review your ingredients before proceeding to meal planning.</Text>
-          
-          <View style={styles.itemsContainer}>
-            {groceryItems.map((item, index) => (
-              <View key={index} style={styles.itemBadge}>
-                <Text style={styles.itemText}>{item}</Text>
-                <TouchableOpacity onPress={() => handleRemoveItem(index)}>
-                  <Text style={styles.removeText}>×</Text>
+          {/* Current Items Display */}
+          {groceryItems.length > 0 && (
+            <View style={styles.itemsSection}>
+              <Text style={styles.itemsTitle}>Your Ingredients ({groceryItems.length} items)</Text>
+              <Text style={styles.itemsSubtitle}>Review your ingredients before proceeding to meal planning.</Text>
+
+              <View style={styles.itemsContainer}>
+                {groceryItems.map((item, index) => (
+                  <View key={index} style={styles.itemBadge}>
+                    <Text style={styles.itemText}>{item}</Text>
+                    <TouchableOpacity onPress={() => handleRemoveItem(index)}>
+                      <Text style={styles.removeText}>×</Text>
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
+
+              <View style={styles.actionButtons}>
+                <TouchableOpacity
+                  style={styles.clearButton}
+                  onPress={() => setGroceryItems([])}
+                >
+                  <Text style={styles.clearButtonText}>Clear All</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.continueButton}
+                  onPress={handleContinue}
+                >
+                  <Text style={styles.continueButtonText}>Continue to Meal Planning →</Text>
                 </TouchableOpacity>
               </View>
-            ))}
-          </View>
-
-          <View style={styles.actionButtons}>
-            <TouchableOpacity
-              style={styles.clearButton}
-              onPress={() => setGroceryItems([])}
-            >
-              <Text style={styles.clearButtonText}>Clear All</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.continueButton}
-              onPress={() => navigation.navigate('MealPlanning')}
-            >
-              <Text style={styles.continueButtonText}>Continue to Meal Planning →</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+            </View>
+          )}
+        </>
       )}
     </ScrollView>
   );
@@ -250,6 +184,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f9fafb',
+  },
+  choiceContainer: {
+    flex: 1,
+    padding: 16,
   },
   header: {
     padding: 24,
@@ -271,34 +209,33 @@ const styles = StyleSheet.create({
     color: '#6b7280',
     textAlign: 'center',
   },
-  methodsContainer: {
-    padding: 16,
-    gap: 12,
+  choiceButtons: {
+    gap: 16,
+    marginTop: 24,
   },
-  methodCard: {
+  choiceCard: {
     backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 8,
-    borderWidth: 1,
+    padding: 24,
+    borderRadius: 12,
+    borderWidth: 2,
     borderColor: '#e5e7eb',
+    alignItems: 'center',
   },
-  activeMethodCard: {
-    borderColor: '#3b82f6',
-    backgroundColor: '#eff6ff',
+  choiceIcon: {
+    fontSize: 48,
+    marginBottom: 12,
   },
-  methodIcon: {
-    fontSize: 32,
-    marginBottom: 8,
-  },
-  methodTitle: {
-    fontSize: 26,
+  choiceTitle: {
+    fontSize: 20,
     fontWeight: '600',
     color: '#1f2937',
-    marginBottom: 4,
+    marginBottom: 8,
+    textAlign: 'center',
   },
-  methodDescription: {
-    fontSize: 13,
+  choiceDescription: {
+    fontSize: 14,
     color: '#6b7280',
+    textAlign: 'center',
   },
   inputSection: {
     padding: 16,
@@ -355,77 +292,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 24,
     fontWeight: 'bold',
-  },
-  uploadButton: {
-    backgroundColor: '#3b82f6',
-    padding: 40,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  uploadButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  helpText: {
-    fontSize: 13,
-    color: '#6b7280',
-    textAlign: 'center',
-  },
-  chatContainer: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 8,
-    height: 300,
-  },
-  chatMessages: {
-    flex: 1,
-    padding: 12,
-  },
-  chatBubble: {
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 8,
-    maxWidth: '80%',
-  },
-  userBubble: {
-    backgroundColor: '#3b82f6',
-    alignSelf: 'flex-end',
-  },
-  aiBubble: {
-    backgroundColor: '#f3f4f6',
-    alignSelf: 'flex-start',
-  },
-  chatText: {
-    fontSize: 14,
-    color: '#1f2937',
-  },
-  chatInputContainer: {
-    flexDirection: 'row',
-    padding: 12,
-    borderTopWidth: 1,
-    borderTopColor: '#e5e7eb',
-  },
-  chatInput: {
-    flex: 1,
-    backgroundColor: '#f9fafb',
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 8,
-    padding: 8,
-    marginRight: 8,
-  },
-  sendButton: {
-    backgroundColor: '#3b82f6',
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    justifyContent: 'center',
-  },
-  sendButtonText: {
-    color: '#fff',
-    fontWeight: '600',
   },
   itemsSection: {
     padding: 16,

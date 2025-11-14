@@ -104,7 +104,7 @@ export default function MealPlanningScreen({ navigation }: Props) {
 
   const renderStep1 = () => (
     <View style={styles.stepContainer}>
-      <Text style={styles.stepTitle}>📅 Duration & Servings</Text>
+      <Text style={styles.stepTitle}>Duration & Servings</Text>
       <Text style={styles.stepSubtitle}>How long do you want to plan for and how many people?</Text>
 
       <View style={styles.sliderSection}>
@@ -112,7 +112,7 @@ export default function MealPlanningScreen({ navigation }: Props) {
           Planning Duration: {preferences.duration} {preferences.duration === 1 ? 'day' : 'days'}
         </Text>
         <View style={styles.sliderButtons}>
-          {[1, 3, 7, 14, 21, 28].map((days) => (
+          {[1, 3, 7].map((days) => (
             <TouchableOpacity
               key={days}
               style={[
@@ -291,10 +291,9 @@ export default function MealPlanningScreen({ navigation }: Props) {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerIcon}>📅</Text>
-        <Text style={styles.headerTitle}>Plan Your Nutritious Meals</Text>
+        <Text style={styles.headerTitle}>📅 Plan Your Nutritious Meals</Text>
         <Text style={styles.headerSubtitle}>
-          Set your meal planning preferences and timeframe. We'll generate a personalized nutrition plan based on your available ingredients.
+          Set your meal planning preferences and timeframe.
         </Text>
       </View>
 
@@ -376,6 +375,7 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 24,
+    paddingBottom: 12,
     alignItems: 'center',
   },
   headerIcon: {

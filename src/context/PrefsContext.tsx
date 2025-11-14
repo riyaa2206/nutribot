@@ -10,13 +10,14 @@ const PrefsContext = createContext<PrefsContextType | null>(null);
 
 export function PrefsProvider({ children }: { children: React.ReactNode }) {
   const [preferences, setPreferences] = useState<MealPlanPreferences>({
+    goal: '',
     duration: 7,
     servings: 2,
-    goal: '',
+    groceries: [],
+    skillLevel: '',
+    cookingTime: '',
     dietaryRestrictions: [],
     mealTypes: ['breakfast', 'lunch', 'dinner'],
-    cookingTime: '',
-    skillLevel: '',
   });
 
   return (

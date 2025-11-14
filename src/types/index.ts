@@ -1,11 +1,12 @@
 export interface MealPlanPreferences {
+  goal: string;
   duration: number;
   servings: number;
-  goal: string;
-  dietaryRestrictions: string[];
+  skillLevel: string;
+  groceries: string[];
   mealTypes: string[];
   cookingTime: string;
-  skillLevel: string;
+  dietaryRestrictions: string[];
 }
 
 export interface Recipe {
